@@ -4,7 +4,7 @@ mod state;
 
 use std::sync::{Arc, Mutex};
 
-use egui::{Label, Response, TextStyle, TextWrapMode, Widget};
+use egui::{Label, Response, Style, TextStyle, TextWrapMode, Widget};
 use globset::GlobSetBuilder;
 
 use self::color::ToColor32;
@@ -121,6 +121,7 @@ impl Widget for Logs {
                 TableCell::default()
                     .common_props(CommonProps::new().min_width(120.0))
                     .children(|ui| {
+
                         let mut short_message = String::new();
                         let mut complete_message = String::new();
                         let mut log_message = String::new();
@@ -146,7 +147,7 @@ impl Widget for Logs {
                         complete_message.push_str("\n\n");
                         complete_message.push_str(&log_message);
 
-                        ui.add(Label::new(short_message).wrap_mode(TextWrapMode::Extend))
+                        ui.add(Label::new(short_message).wrap_mode(TextWrapMode::Wrap))
                             .on_hover_text(complete_message);
                     })
                     .show(ui);
