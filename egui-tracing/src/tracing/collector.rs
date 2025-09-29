@@ -1,5 +1,6 @@
 use std::sync::{Arc, Mutex};
 
+use globset::Glob;
 use tracing::{Event, Level, Subscriber};
 #[cfg(feature = "log")]
 use tracing_log::NormalizeEvent;
@@ -18,6 +19,7 @@ pub enum AllowedTargets {
 #[derive(Debug, Clone)]
 pub struct EventCollector {
     allowed_targets: AllowedTargets,
+    pub excluded: Vec<Glob>,
     level: Level,
     events: Arc<Mutex<Vec<CollectedEvent>>>,
 }
@@ -68,6 +70,7 @@ impl Default for EventCollector {
             allowed_targets: AllowedTargets::All,
             events: Arc::new(Mutex::new(Vec::new())),
             level: Level::TRACE, // capture everything by default.
+            excluded: Vec::default()
         }
     }
 }

@@ -12,3 +12,6 @@ pub use tracing_subscriber;
 
 pub use self::tracing::EventCollector;
 pub use self::ui::Logs;
+
+pub use globset;
+pub use globset::Glob;

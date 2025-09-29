@@ -36,10 +36,10 @@ impl Widget for Logs {
     fn ui(self, ui: &mut egui::Ui) -> Response {
         let state = ui.memory_mut(|mem| {
             let state_mem_id = ui.id();
+            let mut default = LogsState::default();
+            default.target_exclude.targets = self.collector.excluded.clone();
             mem.data
-                .get_temp_mut_or_insert_with(state_mem_id, || {
-                    Arc::new(Mutex::new(LogsState::default()))
-                })
+                .get_temp_mut_or_insert_with(state_mem_id, || Arc::new(Mutex::new(default)))
                 .clone()
         });
         let mut state = state.lock().unwrap();
@@ -47,7 +47,7 @@ impl Widget for Logs {
         // TODO: cache the globset
         let glob = {
             let mut glob = GlobSetBuilder::new();
-            for target in state.target_filter.targets.clone() {
+            for target in state.target_exclude.targets.clone() {
                 glob.add(target);
             }
             glob.build().unwrap()
@@ -85,7 +85,7 @@ impl Widget for Logs {
                     .common_props(CommonProps::new().min_width(120.0))
                     .children(|ui| {
                         TargetMenuButton::default()
-                            .state(&mut state.target_filter)
+                            .state(&mut state.target_exclude)
                             .show(ui);
                     })
                     .show(ui);

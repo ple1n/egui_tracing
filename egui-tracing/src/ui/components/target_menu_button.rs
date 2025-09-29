@@ -19,20 +19,18 @@ impl<'a> TargetMenuButton<'a> {
         let state = self.state.unwrap();
         ui.menu_button("Target", |ui| {
             ui.label("Target Filter");
-
             let (input, add_button) = ui
                 .horizontal(|ui| {
                     let input = ui
                         .text_edit_singleline(&mut state.input)
                         .on_hover_text("example: eframe::*");
+                    input.request_focus();
                     let button = ui.button("Add");
                     (input, button)
                 })
                 .inner;
 
-            if add_button.clicked()
-                || (input.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)))
-            {
+            if add_button.clicked() || (ui.input(|i| i.key_pressed(egui::Key::Enter))) {
                 state.targets.push(Glob::new(&state.input).unwrap());
                 state.input = "".to_owned();
             }

@@ -5,7 +5,8 @@ use tracing::Level;
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct LogsState {
     pub level_filter: LevelFilter,
-    pub target_filter: TargetFilter,
+    /// Global filter to exclude targets
+    pub target_exclude: TargetFilter,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
